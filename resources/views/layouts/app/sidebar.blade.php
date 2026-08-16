@@ -5,9 +5,10 @@
     @include('partials.head')
 </head>
 
-<body class="min-h-screen bg-white dark:bg-zinc-100 p-0 h-0.5">
-    <flux:sidebar sticky collapsible="mobile"
-    class="m-4 p-4 shadow-sm h-[calc(100vh-2rem)] w-64 rounded-2xl border border-zinc-200 bg-white">
+<body class="min-h-screen bg-white dark:bg-zinc-100 ">
+    <flux:sidebar sticky 
+                  collapsible="mobile"
+                  class="fixed m-4 p-4 shadow-sm h-[calc(100vh-2rem)] w-64 rounded-2xl border border-zinc-200 bg-white">
 
     <flux:sidebar.header class="px-2 pt-2">
 
