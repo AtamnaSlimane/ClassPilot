@@ -17,7 +17,7 @@
 
 
             <a href="{{ route('teacher.students.create') }}"
-                class="rounded-xl bg-green-600 px-6 py-3 text-lg font-semibold text-white shadow-sm transition hover:bg-green-700 hover:shadow-md ">
+                class="rounded-xl bg-blue-600 px-6 py-3 text-lg font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md ">
 
                 + Add Student
 

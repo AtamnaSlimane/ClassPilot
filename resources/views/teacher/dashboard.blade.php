@@ -1,5 +1,5 @@
 <x-layouts::app :title="__('Teacher Dashboard')">
-    <div class=" flex flex-col -mb-6 -mt-6 m-0  ">
+    <div class=" flex flex-col  m-0  ">
 
         <div class="flex flex-row justify-between items-end  h-75 mb-3 ">
             <div class="  flex w-1/2 flex-col justify-end h-50 p-2 ">
