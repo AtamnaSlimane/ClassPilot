@@ -1,41 +1,67 @@
+{{-- Name --}}
 <div>
-
-    <label class="block font-medium">
-        Name
+    <label
+        for="name"
+        class="block text-sm font-semibold text-zinc-700 dark:text-zinc-200"
+    >
+        Class Name
     </label>
 
     <input
+        id="name"
         name="name"
+        type="text"
         value="{{ old('name', $class->name ?? '') }}"
-        class="mt-1 w-full rounded-lg border p-2">
-
+        placeholder="e.g. Computer Science 1"
+        class="mt-2 w-full rounded-xl border border-zinc-300 bg-white px-4 py-3
+               text-zinc-900 outline-none transition
+               focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
+               dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+    >
 </div>
 
 
+{{-- Description --}}
 <div>
-
-    <label class="block font-medium">
+    <label
+        for="description"
+        class="block text-sm font-semibold text-zinc-700 dark:text-zinc-200"
+    >
         Description
     </label>
 
     <textarea
+        id="description"
         name="description"
         rows="4"
-        class="mt-1 w-full rounded-lg border p-2">{{ old('description', $class->description ?? '') }}</textarea>
-
+        placeholder="Describe this class..."
+        class="mt-2 w-full resize-none rounded-xl border border-zinc-300 bg-white px-4 py-3
+               text-zinc-900 outline-none transition
+               focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
+               dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+    >{{ old('description', $class->description ?? '') }}</textarea>
 </div>
 
 
+{{-- Students --}}
 <div>
-
-    <label class="block font-medium">
+    <label
+        for="students-select"
+        class="block text-sm font-semibold text-zinc-700 dark:text-zinc-200"
+    >
         Students
     </label>
+
+    <p class="mt-1 text-sm text-zinc-500">
+        Select the students assigned to this class.
+    </p>
 
     <select
         id="students-select"
         name="students[]"
-        multiple>
+        multiple
+        class="mt-2 w-full"
+    >
 
         @foreach($students as $student)
 
@@ -43,16 +69,14 @@
                 value="{{ $student->id }}"
                 @selected(
                     isset($class) && $class->students->contains($student->id)
-                )>
-
+                )
+            >
                 {{ $student->name }}
-
             </option>
 
         @endforeach
 
     </select>
-
 </div>
 
 
