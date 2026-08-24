@@ -44,7 +44,7 @@ class AcademyClassPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isTeacher();
+        return false;
     }
 
     /**
@@ -53,8 +53,7 @@ class AcademyClassPolicy
     public function update(User $user, AcademyClass $class): bool
     {
 
-        return $user->isTeacher()
-            && $class->teacher_id === $user->id;
+        return false;
     }
 
     /**
@@ -62,7 +61,7 @@ class AcademyClassPolicy
      */
     public function delete(User $user, AcademyClass $class): bool
     {
-        return $this->update($user, $class);
+        return false;
     }
 
     /**

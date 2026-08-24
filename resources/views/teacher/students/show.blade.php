@@ -1,153 +1,365 @@
 <x-layouts::app :title="$student->name">
 
-<div class="space-y-6">
+    <div class="space-y-8">
 
-    <div class="flex items-center justify-between">
+        {{-- Header --}}
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 
-        <div>
+            <div class="space-y-2">
 
-            <h1 class="text-3xl font-bold text-zinc-900 dark:text-white">
-                {{ $student->name }}
-            </h1>
+                <flux:button
+                    href="{{ route('teacher.students.index') }}"
+                    variant="ghost"
+                    size="sm"
+                    icon="arrow-left"
+                    inset
+                >
+                    Students
+                </flux:button>
 
-            <p class="mt-1 text-zinc-500">
-                Student Profile
-            </p>
+                <div class="flex items-center gap-4">
+
+                    <div
+                        class="flex size-14 shrink-0 items-center justify-center rounded-full bg-blue-50 text-lg font-semibold text-blue-600 dark:bg-blue-500/10 dark:text-blue-400"
+                    >
+                        {{ collect(explode(' ', $student->name))
+                            ->map(fn ($part) => $part[0] ?? '')
+                            ->take(2)
+                            ->implode('') }}
+                    </div>
+
+                    <div>
+
+                        <flux:heading size="xl">
+                            {{ $student->name }}
+                        </flux:heading>
+
+                        <flux:text class="text-zinc-500">
+                            Student Profile
+                        </flux:text>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 
-<div class="flex gap-3">
 
-    <a
-        href="{{ route('teacher.students.edit', $student) }}"
-        class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+        {{-- Quick Stats --}}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
 
-        Edit
+            {{-- Status --}}
+            <flux:card class="flex items-center gap-4 p-5 dark:!bg-zinc-950 dark:border-zinc-800">
 
-    </a>
+                <div class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
 
-    <a
-        href="{{ route('teacher.students.index') }}"
-        class="rounded-lg bg-zinc-700 px-4 py-2 text-white hover:bg-zinc-800">
+                    <flux:icon
+                        name="check-circle"
+                        class="size-5"
+                    />
 
-        Back
-
-    </a>
-
-</div>
-    </div>
-
-
-
-    <div class="grid gap-6 md:grid-cols-3">
-
-        <div class="rounded-xl bg-white p-6 shadow dark:bg-zinc-900">
-
-            <h2 class="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                Information
-            </h2>
-
-            <dl class="space-y-3">
-
-                <div>
-                    <dt class="text-sm text-zinc-500">Email</dt>
-                    <dd class="text-zinc-900 dark:text-zinc-100">
-                        {{ $student->email }}
-                    </dd>
                 </div>
 
                 <div>
-                    <dt class="text-sm text-zinc-500">Phone</dt>
-                    <dd class="text-zinc-900 dark:text-zinc-100">
-                        {{ $student->phone ?? 'Not provided' }}
-                    </dd>
-                </div>
 
-                <div>
-                    <dt class="text-sm text-zinc-500">Status</dt>
-                    <dd class="text-zinc-900 dark:text-zinc-100">
+                    <flux:text class="text-xs uppercase tracking-wide text-zinc-500">
+                        Status
+                    </flux:text>
+
+                    <flux:heading size="lg">
                         {{ ucfirst($student->status) }}
-                    </dd>
+                    </flux:heading>
+
+                </div>
+
+            </flux:card>
+
+
+            {{-- Classes --}}
+            <flux:card class="flex items-center gap-4 p-5 dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <div class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400">
+
+                    <flux:icon
+                        name="academic-cap"
+                        class="size-5"
+                    />
+
                 </div>
 
                 <div>
-                    <dt class="text-sm text-zinc-500">Join Date</dt>
-                    <dd class="text-zinc-900 dark:text-zinc-100">
-                        {{ optional($student->join_date)->format('M d, Y') ?? '-' }}
-                    </dd>
+
+                    <flux:text class="text-xs uppercase tracking-wide text-zinc-500">
+                        Classes
+                    </flux:text>
+
+                    <flux:heading size="lg">
+                        {{ $student->classes->count() }}
+                    </flux:heading>
+
                 </div>
 
-            </dl>
+            </flux:card>
+
+
+            {{-- Parent --}}
+            <flux:card class="flex items-center gap-4 p-5 dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <div class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400">
+
+                    <flux:icon
+                        name="user"
+                        class="size-5"
+                    />
+
+                </div>
+
+                <div class="min-w-0">
+
+                    <flux:text class="text-xs uppercase tracking-wide text-zinc-500">
+                        Parent
+                    </flux:text>
+
+                    <flux:heading
+                        size="lg"
+                        class="truncate"
+                    >
+                        {{ $student->parent?->name ?? 'None' }}
+                    </flux:heading>
+
+                </div>
+
+            </flux:card>
 
         </div>
 
 
+        {{-- Information --}}
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
 
-        <div class="rounded-xl bg-white p-6 shadow dark:bg-zinc-900">
+            {{-- Student Information --}}
+            <flux:card class="dark:!bg-zinc-950 dark:border-zinc-800">
 
-            <h2 class="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                Parent
-            </h2>
+                <flux:heading size="lg">
+                    Student Information
+                </flux:heading>
 
-            @if($student->parent)
+                <div class="mt-5 divide-y divide-zinc-200 dark:divide-zinc-800">
 
-                    {{ $student->parent->name }}
+                    <div class="flex items-center justify-between gap-4 py-3">
+
+                        <flux:text class="text-zinc-500">
+                            Name
+                        </flux:text>
+
+                        <flux:text class="font-medium">
+                            {{ $student->name }}
+                        </flux:text>
+
+                    </div>
+
+                    <div class="flex items-center justify-between gap-4 py-3">
+
+                        <flux:text class="text-zinc-500">
+                            Email
+                        </flux:text>
+
+                        <flux:text class="font-medium">
+                            {{ $student->email }}
+                        </flux:text>
+
+                    </div>
+
+                    <div class="flex items-center justify-between gap-4 py-3">
+
+                        <flux:text class="text-zinc-500">
+                            Phone
+                        </flux:text>
+
+                        <flux:text class="font-medium">
+                            {{ $student->phone ?? 'Not provided' }}
+                        </flux:text>
+
+                    </div>
+
+                    <div class="flex items-center justify-between gap-4 py-3">
+
+                        <flux:text class="text-zinc-500">
+                            Joined
+                        </flux:text>
+
+                        <flux:text class="font-medium">
+                            {{ $student->join_date?->format('M d, Y') ?? '-' }}
+                        </flux:text>
+
+                    </div>
+
+                    <div class="flex items-center justify-between gap-4 py-3">
+
+                        <flux:text class="text-zinc-500">
+                            Status
+                        </flux:text>
+
+                        @if($student->status === 'active')
+
+                            <flux:badge color="emerald">
+                                Active
+                            </flux:badge>
+
+                        @else
+
+                            <flux:badge color="zinc">
+                                Inactive
+                            </flux:badge>
+
+                        @endif
+
+                    </div>
+
+                </div>
+
+            </flux:card>
+
+
+            {{-- Parent --}}
+            <flux:card class="dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <flux:heading size="lg">
+                    Parent
+                </flux:heading>
+
+                @if($student->parent)
+
+                    <div class="mt-5 flex items-center gap-4">
+
+                        <div
+                            class="flex size-12 shrink-0 items-center justify-center rounded-full bg-amber-50 font-semibold text-amber-600 dark:bg-amber-500/10 dark:text-amber-400"
+                        >
+                            {{ collect(explode(' ', $student->parent->name))
+                                ->map(fn ($part) => $part[0] ?? '')
+                                ->take(2)
+                                ->implode('') }}
+                        </div>
+
+                        <div>
+
+                            <flux:heading size="lg">
+                                {{ $student->parent->name }}
+                            </flux:heading>
+
+                            @if($student->parent->email)
+
+                                <flux:text class="text-zinc-500">
+                                    {{ $student->parent->email }}
+                                </flux:text>
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                @else
+
+                    <div class="mt-5 rounded-xl bg-zinc-50 p-5 dark:bg-zinc-900">
+
+                        <flux:text class="text-zinc-500">
+                            No parent assigned.
+                        </flux:text>
+
+                    </div>
+
+                @endif
+
+            </flux:card>
+
+        </div>
+
+
+        {{-- Classes --}}
+        <flux:card class="overflow-hidden p-0 dark:!bg-zinc-950 dark:border-zinc-800">
+
+            <div class="border-b border-zinc-200 px-6 py-5 dark:border-zinc-800">
+
+                <flux:heading size="lg">
+                    Classes
+                </flux:heading>
+
+                <flux:text class="mt-1 text-zinc-500">
+                    Classes this student is enrolled in.
+                </flux:text>
+
+            </div>
+
+            @if($student->classes->count())
+
+                <div class="divide-y divide-zinc-200 dark:divide-zinc-800">
+
+                    @foreach($student->classes as $class)
+
+                        <div class="flex items-center justify-between gap-4 px-6 py-4">
+
+                            <div>
+
+                                <flux:text class="font-medium">
+                                    {{ $class->name }}
+                                </flux:text>
+
+                            </div>
+
+                            <flux:button
+                                href="{{ route('teacher.classes.show', $class) }}"
+                                variant="ghost"
+                                size="sm"
+                                icon="chevron-right"
+                                inset
+                            />
+
+                        </div>
+
+                    @endforeach
+
+                </div>
 
             @else
 
-                <span class="text-zinc-500">
-                    No parent assigned
-                </span>
+                <div class="flex flex-col items-center justify-center px-6 py-12 text-center">
 
-            @endif
+                    <flux:icon
+                        name="academic-cap"
+                        class="size-8 text-zinc-400"
+                    />
 
-        </div>
+                    <flux:heading size="sm" class="mt-3">
+                        No classes
+                    </flux:heading>
 
-
-
-        <div class="rounded-xl bg-white p-6 shadow dark:bg-zinc-900">
-
-            <h2 class="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                Teachers
-            </h2>
-
-            @forelse($student->teachers as $teacher)
-
-                <div class="mb-2">
-
-
-                        {{ $teacher->name }}
+                    <flux:text class="mt-1 text-zinc-500">
+                        This student is not enrolled in any classes.
+                    </flux:text>
 
                 </div>
 
-            @empty
+            @endif
 
-                <p class="text-zinc-500">
-                    No teachers assigned.
-                </p>
-
-            @endforelse
-
-        </div>
-
-    </div>
+        </flux:card>
 
 
+        {{-- Notes --}}
+        <flux:card class="dark:!bg-zinc-950 dark:border-zinc-800">
 
-    <div class="rounded-xl bg-white p-6 shadow dark:bg-zinc-900">
+            <flux:heading size="lg">
+                Notes
+            </flux:heading>
 
-        <h2 class="mb-4 text-xl font-semibold text-zinc-900 dark:text-white">
-            Notes
-        </h2>
+            <flux:text class="mt-3 text-zinc-500">
+                {{ $student->notes ?: 'No notes available.' }}
+            </flux:text>
 
-        <p class="text-zinc-700 dark:text-zinc-300">
-
-            {{ $student->notes ?: 'No notes available.' }}
-
-        </p>
+        </flux:card>
 
     </div>
-
-</div>
 
 </x-layouts::app>

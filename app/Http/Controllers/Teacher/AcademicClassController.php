@@ -17,7 +17,7 @@ class AcademicClassController extends Controller
     {
 
         Gate::authorize('viewAny', AcademyClass::class);
-        $classes = auth()->user()->classes()->get();
+        $classes = auth()->user()->classes()->withCount('students')->get();
         return view('teacher.classes.index', compact('classes'));
     }
 
@@ -26,11 +26,6 @@ class AcademicClassController extends Controller
      */
     public function create()
     {
-
-        Gate::authorize('create', AcademyClass::class);
-        $students = auth()->user()->students()->orderBy('name')->get();
-
-        return view('teacher.classes.create', compact('students'));
     }
 
     /**
@@ -38,42 +33,6 @@ class AcademicClassController extends Controller
      */
     public function store(Request $request)
     {
-
-        Gate::authorize('create', AcademyClass::class);
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255'
-            ],
-
-            'description' => [
-                'nullable',
-                'string',
-                'max:255'
-            ],
-
-            'students' => [
-                'nullable',
-                'array'
-            ],
-
-            'students.*' => [
-                'exists:students,id'
-            ],
-        ]);
-
-        $class = auth()->user()->classes()->create(
-            collect($validated)
-                ->except('students')
-                ->toArray()
-        );
-
-        $class->students()->sync($validated['students'] ?? []);
-
-        return redirect()
-            ->route('teacher.classes.index')
-            ->with('success', 'Class created successfully.');
     }
 
     /**
@@ -84,6 +43,7 @@ class AcademicClassController extends Controller
 
         Gate::authorize('view', $class);
         $class->load('students');
+        $class->loadCount('students');
 
         return view('teacher.classes.show', compact('class'));
     }
@@ -93,11 +53,6 @@ class AcademicClassController extends Controller
      */
     public function edit(AcademyClass $class)
     {
-        Gate::authorize('view', $class);
-
-        $students = auth()->user()->students()->orderBy('name')->get();
-
-        return view('teacher.classes.edit', compact('class', 'students'));
     }
 
     /**
@@ -106,25 +61,6 @@ class AcademicClassController extends Controller
     public function update(Request $request, AcademyClass $class)
     {
 
-        Gate::authorize('update', $class);
-
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'students' => ['nullable', 'array'],
-            'students.*' => ['exists:students,id'],
-        ]);
-
-        $class->update([
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-        ]);
-
-        $class->students()->sync($validated['students'] ?? []);
-
-        return redirect()
-            ->route('teacher.classes.show', $class)
-            ->with('success', 'Class updated successfully.');
     }
 
     /**
@@ -132,12 +68,5 @@ class AcademicClassController extends Controller
      */
     public function destroy(AcademyClass $class)
     {
-
-        Gate::authorize('delete', $class);
-        $class->delete();
-
-        return redirect()
-            ->route('teacher.classes.index')
-            ->with('success', 'Class deleted successfully.');
     }
 }

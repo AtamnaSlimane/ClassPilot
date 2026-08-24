@@ -46,7 +46,11 @@ class StudentController extends Controller
 
         Gate::authorize('view', $student);
 
-        $student->load('parent');
+        $student->load([
+        'parent',
+       'classes' => fn ($query) =>
+            $query->where('teacher_id', auth()->user()->id),
+    ]);
 
         return view('teacher.students.show', compact('student'));
     }
