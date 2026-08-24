@@ -39,7 +39,7 @@ class StudentPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isTeacher();
+        return false;
     }
 
     /**
@@ -48,7 +48,7 @@ class StudentPolicy
     public function update(User $user, Student $student): bool
     {
 
-        return $user->isTeacher() && $this->view($user, $student);;
+        return false;
     }
 
     /**
@@ -57,7 +57,7 @@ class StudentPolicy
     public function delete(User $user, Student $student): bool
     {
 
-        return $this->update($user, $student);
+        return false;
     }
 
     /**
