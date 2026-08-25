@@ -53,7 +53,8 @@ class AcademyClassPolicy
     public function update(User $user, AcademyClass $class): bool
     {
 
-        return false;
+        return $user->isTeacher()
+            && $class->teacher_id === $user->id;
     }
 
     /**

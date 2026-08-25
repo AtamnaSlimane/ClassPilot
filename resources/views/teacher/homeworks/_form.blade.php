@@ -1,164 +1,174 @@
-<div>
+<form
+    method="POST"
+    action="{{ $action }}"
+    enctype="multipart/form-data"
+    class="space-y-6"
+>
 
-    <label class="block font-medium">
-        Class
-    </label>
+    @csrf
 
-    <select
-        id="class-select"
-        name="academy_class_id">
-
-        <option value="">Select a class...</option>
-
-        @foreach($classes as $academyClass)
-
-            <option
-                value="{{ $academyClass->id }}"
-                @selected(old('academy_class_id', $homework->academy_class_id ?? '') == $academyClass->id)>
-
-                {{ $academyClass->name }}
-
-            </option>
-
-        @endforeach
-
-    </select>
-
-    @error('academy_class_id')
-        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-    @enderror
-
-</div>
-
-
-<div>
-
-    <label class="block font-medium">
-        Title
-    </label>
-
-    <input
-        name="title"
-        value="{{ old('title', $homework->title ?? '') }}"
-        class="mt-1 w-full rounded-lg border p-2">
-
-    @error('title')
-        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-    @enderror
-
-</div>
-
-
-<div>
-
-    <label class="block font-medium">
-        Instructions
-    </label>
-
-    <textarea
-        name="instructions"
-        rows="6"
-        class="mt-1 w-full rounded-lg border p-2">{{ old('instructions', $homework->instructions ?? '') }}</textarea>
-
-</div>
-<div>
-
-    <label class="block font-medium">
-        Homework Attachment
-    </label>
-
-    @if(isset($homework) && $homework->file_path)
-
-        @php
-            $extension = strtolower(pathinfo($homework->file_path, PATHINFO_EXTENSION));
-        @endphp
-
-        <div class="mt-3 rounded-lg border bg-zinc-50 p-4 dark:bg-zinc-800">
-
-            <p class="mb-4 font-medium">
-                Current Attachment
-            </p>
-
-            @if(in_array($extension, ['png', 'jpg', 'jpeg', 'gif', 'webp']))
-
-                <img
-                    src="{{ route('teacher.homeworks.preview', $homework) }}"
-                    class="max-h-96 rounded-lg border">
-
-            @elseif($extension === 'pdf')
-
-                <iframe
-                    src="{{ route('teacher.homeworks.preview', $homework) }}"
-                    class="h-[500px] w-full rounded-lg border">
-                </iframe>
-
-            @else
-
-                <a
-                    href="{{ route('teacher.homeworks.preview', $homework) }}"
-                    target="_blank"
-                    class="inline-flex rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
-
-                    Open Current Attachment
-
-                </a>
-
-            @endif
-
-        </div>
-
+    @if($method === 'PUT')
+        @method('PUT')
     @endif
 
 
-    <label class="mt-5 block font-medium">
-        {{ isset($homework) ? 'Replace Attachment' : 'Upload Attachment' }}
-    </label>
+    {{-- Class --}}
+    <flux:field>
 
-    <input
-        type="file"
-        name="file"
-        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.png,.jpg,.jpeg"
-        class="mt-2 w-full rounded-lg border p-2">
+        <flux:label>
+            Class
+        </flux:label>
 
-    <p class="mt-2 text-sm text-zinc-500">
-        Leave this empty to keep the current attachment.
-    </p>
+        <flux:select name="academy_class_id">
 
-    @error('file')
-        <p class="mt-1 text-sm text-red-500">
-            {{ $message }}
-        </p>
-    @enderror
+            <flux:select.option value="">
+                Select a class
+            </flux:select.option>
 
-</div>
+            @foreach($classes as $class)
 
-<div class="pt-2">
+                <flux:select.option
+                    value="{{ $class->id }}"
+                    :selected="old(
+                        'academy_class_id',
+                        $homework?->academy_class_id
+                    ) == $class->id"
+                >
+                    {{ $class->name }}
+                </flux:select.option>
 
-    <label class="block font-medium">
-        Due Date
-    </label>
+            @endforeach
 
-    <input
-        type="date"
-        name="due_date"
-        value="{{ old('due_date', isset($homework) && $homework->due_date ? $homework->due_date->format('Y-m-d') : '') }}"
-        class="mt-1 w-full rounded-lg border p-2">
+        </flux:select>
 
-    @error('due_date')
-        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-    @enderror
+        @error('academy_class_id')
+            <flux:error>{{ $message }}</flux:error>
+        @enderror
 
-</div>
+    </flux:field>
 
 
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+    {{-- Title --}}
+    <flux:field>
 
-    new TomSelect('#class-select', {
-        placeholder: 'Select a class...',
-        create: false,
-    });
-});
-</script>
-@endpush
+        <flux:label>
+            Title
+        </flux:label>
+
+        <flux:input
+            name="title"
+            value="{{ old('title', $homework?->title) }}"
+            placeholder="e.g. Mathematics exercises"
+        />
+
+        @error('title')
+            <flux:error>{{ $message }}</flux:error>
+        @enderror
+
+    </flux:field>
+
+
+    {{-- Instructions --}}
+    <flux:field>
+
+        <flux:label>
+            Instructions
+        </flux:label>
+
+        <flux:textarea
+            name="instructions"
+            rows="6"
+            placeholder="Add instructions for your students..."
+        >{{ old('instructions', $homework?->instructions) }}</flux:textarea>
+
+        @error('instructions')
+            <flux:error>{{ $message }}</flux:error>
+        @enderror
+
+    </flux:field>
+
+
+    {{-- Due date --}}
+    <flux:field>
+
+        <flux:label>
+            Due date
+        </flux:label>
+
+        <flux:input
+            type="datetime-local"
+            name="due_date"
+            value="{{ old(
+                'due_date',
+                $homework?->due_date?->format('Y-m-d')
+            ) }}"
+        />
+
+        @error('due_date')
+            <flux:error>{{ $message }}</flux:error>
+        @enderror
+
+    </flux:field>
+
+
+    {{-- File --}}
+    <flux:field>
+
+        <flux:label>
+            File
+        </flux:label>
+
+        <flux:input
+            type="file"
+            name="file"
+        />
+
+        <flux:description>
+            PDF, Word, PowerPoint, Excel, images or ZIP files. Maximum 10 MB.
+        </flux:description>
+
+        @if($homework?->file_path)
+
+            <div class="mt-3 flex items-center gap-3 rounded-lg bg-zinc-50 p-3 dark:bg-zinc-900">
+
+                <flux:icon
+                    name="paper-clip"
+                    class="size-5 text-zinc-400"
+                />
+
+                <flux:text class="text-sm">
+                    Existing attachment
+                </flux:text>
+
+            </div>
+
+        @endif
+
+        @error('file')
+            <flux:error>{{ $message }}</flux:error>
+        @enderror
+
+    </flux:field>
+
+
+    {{-- Submit --}}
+    <div class="flex items-center justify-end gap-3 border-t border-zinc-200 pt-5 dark:border-zinc-800">
+
+        <flux:button
+            href="{{ $cancelUrl }}"
+            variant="ghost"
+        >
+            Cancel
+        </flux:button>
+
+        <flux:button
+            type="submit"
+            variant="primary"
+            icon="check"
+        >
+            {{ $submitLabel }}
+        </flux:button>
+
+    </div>
+
+</form>

@@ -1,158 +1,241 @@
 <x-layouts::app :title="$homework->title">
 
-<div class="space-y-6">
+    <div class="space-y-8">
 
-    <div class="flex items-center justify-between">
+        {{-- Header --}}
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 
-        <div>
+            <div class="space-y-2">
 
-            <h1 class="text-3xl font-bold">
-                {{ $homework->title }}
-            </h1>
+                <flux:button
+                    href="{{ route('teacher.homeworks.index') }}"
+                    variant="ghost"
+                    size="sm"
+                    icon="arrow-left"
+                    inset
+                >
+                    Homework
+                </flux:button>
 
-            <p class="mt-2 text-zinc-500">
-                {{ $homework->academyClass->name }}
-            </p>
+                <flux:heading size="xl">
+                    {{ $homework->title }}
+                </flux:heading>
 
-        </div>
+                <div class="flex flex-wrap items-center gap-2">
 
-<div class="flex gap-3">
-
-    <a
-        href="{{ route('teacher.homeworks.submissions.index', $homework) }}"
-        class="rounded-lg bg-green-600 px-5 py-2 text-white hover:bg-green-700">
-
-        View Submissions
-
-    </a>
-
-    <a
-        href="{{ route('teacher.homeworks.edit', $homework) }}"
-        class="rounded-lg bg-blue-600 px-5 py-2 text-white hover:bg-blue-700">
-
-        Edit Homework
-
-    </a>
-
-</div>
-    </div>
-
-
-    <div class="rounded-xl bg-white p-6 shadow dark:bg-zinc-900">
-
-        <div class="space-y-8">
-
-            <div>
-
-                <h2 class="text-lg font-semibold">
-                    Instructions
-                </h2>
-
-                <p class="mt-2 whitespace-pre-line text-zinc-700 dark:text-zinc-300">
-
-                    {{ $homework->instructions ?: 'No instructions provided.' }}
-
-                </p>
-
-            </div>
-
-
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-
-                <div>
-
-                    <h3 class="font-semibold">
-                        Class
-                    </h3>
-
-                    <p class="mt-1">
+                    <flux:badge color="blue">
                         {{ $homework->academyClass->name }}
-                    </p>
+                    </flux:badge>
 
-                </div>
+                    @if($homework->due_date)
 
-                <div>
+                        <flux:badge color="amber" icon="calendar">
 
-                    <h3 class="font-semibold">
-                        Due Date
-                    </h3>
+                            Due {{ $homework->due_date->format('M d, Y H:i') }}
 
-                    <p class="mt-1">
-                        {{ $homework->due_date?->format('d M Y') ?? 'No due date' }}
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div>
-
-                <h2 class="text-lg font-semibold">
-                    Attachment
-                </h2>
-
-                @if($homework->file_path)
-
-                    @php
-                        $extension = strtolower(pathinfo($homework->file_path, PATHINFO_EXTENSION));
-                    @endphp
-
-                    @if(in_array($extension, ['png', 'jpg', 'jpeg', 'gif', 'webp']))
-
-                        <img
-                            src="{{ route('teacher.homeworks.preview', $homework) }}"
-                            alt="Homework attachment"
-                            class="mt-4 max-h-[700px] rounded-lg border">
-
-                    @elseif($extension === 'pdf')
-
-                        <iframe
-                            src="{{ route('teacher.homeworks.preview', $homework) }}"
-                            class="mt-4 h-[800px] w-full rounded-lg border">
-                        </iframe>
-
-                    @else
-
-                        <div class="mt-4 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800">
-
-                            <p class="font-medium">
-                                {{ basename($homework->file_path) }}
-                            </p>
-
-                            <p class="mt-1 text-sm text-zinc-500">
-                                This file type can't be previewed in the browser.
-                            </p>
-
-                            <a
-                                href="{{ route('teacher.homeworks.preview', $homework) }}"
-                                target="_blank"
-                                class="mt-4 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
-
-                                Open Attachment
-
-                            </a>
-
-                        </div>
+                        </flux:badge>
 
                     @endif
 
-                @else
-
-                    <div class="mt-4 rounded-lg border border-dashed border-zinc-300 p-6 text-center text-zinc-500 dark:border-zinc-700">
-
-                        No attachment was uploaded for this homework.
-
-                    </div>
-
-                @endif
+                </div>
 
             </div>
 
+            <flux:button
+                href="{{ route('teacher.homeworks.edit', $homework) }}"
+                variant="primary"
+                icon="pencil"
+            >
+                Edit Homework
+            </flux:button>
+
         </div>
 
-    </div>
 
-</div>
+        {{-- Overview --}}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+
+            <flux:card class="flex items-center gap-4 p-5 dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <div class="flex size-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+                    <flux:icon name="academic-cap" class="size-5" />
+                </div>
+
+                <div>
+
+                    <flux:text class="text-xs uppercase tracking-wide text-zinc-500">
+                        Class
+                    </flux:text>
+
+                    <flux:heading size="sm">
+                        {{ $homework->academyClass->name }}
+                    </flux:heading>
+
+                </div>
+
+            </flux:card>
+
+
+            <flux:card class="flex items-center gap-4 p-5 dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <div class="flex size-11 items-center justify-center rounded-xl bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400">
+                    <flux:icon name="document-text" class="size-5" />
+                </div>
+
+                <div>
+
+                    <flux:text class="text-xs uppercase tracking-wide text-zinc-500">
+                        Submissions
+                    </flux:text>
+
+                    <flux:heading size="lg">
+                        {{ $homework->submissions()->count() }}
+                    </flux:heading>
+
+                </div>
+
+            </flux:card>
+
+
+            <flux:card class="flex items-center gap-4 p-5 dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <div class="flex size-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+                    <flux:icon name="calendar" class="size-5" />
+                </div>
+
+                <div>
+
+                    <flux:text class="text-xs uppercase tracking-wide text-zinc-500">
+                        Due Date
+                    </flux:text>
+
+                    <flux:heading size="sm">
+                        {{ $homework->due_date?->format('M d, Y') ?? 'No deadline' }}
+                    </flux:heading>
+
+                </div>
+
+            </flux:card>
+
+        </div>
+
+
+        {{-- Content --}}
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+            {{-- Instructions --}}
+            <flux:card class="lg:col-span-2 dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <flux:heading size="lg">
+                    Instructions
+                </flux:heading>
+
+                @if($homework->instructions)
+
+                    <div class="mt-5 whitespace-pre-line text-zinc-700 dark:text-zinc-300">
+                        {{ $homework->instructions }}
+                    </div>
+
+                @else
+
+                    <flux:text class="mt-5 text-zinc-500">
+                        No instructions provided.
+                    </flux:text>
+
+                @endif
+
+            </flux:card>
+
+
+            {{-- Attachment --}}
+            <flux:card class="dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <flux:heading size="lg">
+                    Attachment
+                </flux:heading>
+
+                @if($homework->file_path)
+
+                    <div class="mt-5 flex items-center gap-3">
+
+                        <div class="flex size-11 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-900">
+
+                            <flux:icon
+                                name="paper-clip"
+                                class="size-5 text-zinc-500"
+                            />
+
+                        </div>
+
+                        <div class="min-w-0">
+
+                            <flux:text class="truncate font-medium">
+                                Homework file
+                            </flux:text>
+
+                            <flux:text class="text-sm text-zinc-500">
+                                Attached document
+                            </flux:text>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mt-5 flex gap-2">
+
+                        <flux:button
+                            href="{{ route('teacher.homeworks.preview', $homework) }}"
+                            target="_blank"
+                            variant="primary"
+                            icon="eye"
+                        >
+                            Preview
+                        </flux:button>
+
+                    </div>
+
+                @else
+
+                    <flux:text class="mt-5 text-zinc-500">
+                        No attachment.
+                    </flux:text>
+
+                @endif
+
+            </flux:card>
+
+        </div>
+
+
+        {{-- Submissions --}}
+        <flux:card class="dark:!bg-zinc-950 dark:border-zinc-800">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <flux:heading size="lg">
+                        Student Submissions
+                    </flux:heading>
+
+                    <flux:text class="mt-1 text-zinc-500">
+                        Review and grade submissions for this homework.
+                    </flux:text>
+
+                </div>
+
+                <flux:button
+                    href="{{ route('teacher.homeworks.submissions.index', $homework) }}"
+                    variant="ghost"
+                    icon="arrow-right"
+                >
+                    View Submissions
+                </flux:button>
+
+            </div>
+
+        </flux:card>
+
+    </div>
 
 </x-layouts::app>

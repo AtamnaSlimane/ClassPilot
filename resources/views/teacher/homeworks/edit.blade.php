@@ -1,44 +1,95 @@
 <x-layouts::app :title="__('Edit Homework')">
 
-<div class="max-w-3xl space-y-6">
+    <div class="space-y-8">
 
-    <h1 class="text-3xl font-bold">
+        {{-- Header --}}
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 
-        Edit Homework
+            <div class="space-y-2">
 
-    </h1>
+                <flux:button
+                    href="{{ route('teacher.homeworks.index') }}"
+                    variant="ghost"
+                    size="sm"
+                    icon="arrow-left"
+                    inset
+                >
+                    Homework
+                </flux:button>
 
-    <form
-        method="POST"
-        action="{{ route('teacher.homeworks.update', $homework) }}"
-enctype="multipart/form-data"
-        class="space-y-5 rounded-xl bg-white p-6 shadow dark:bg-zinc-900">
+                <flux:heading size="xl">
+                    Edit Homework
+                </flux:heading>
 
-        @csrf
-        @method('PUT')
+                <flux:text class="text-zinc-500">
+                    Update "{{ $homework->title }}".
+                </flux:text>
 
-        @include('teacher.homeworks._form')
+            </div>
 
-        <div class="flex justify-end">
-
-            <button
-                class="rounded-lg bg-blue-600 px-5 py-2 text-white hover:bg-blue-700">
-
-                Save Changes
-
-            </button>
+            <flux:button
+                href="{{ route('teacher.homeworks.show', $homework) }}"
+                variant="ghost"
+                icon="eye"
+            >
+                View Homework
+            </flux:button>
 
         </div>
 
-    </form>
 
-<x-confirm-delete
-    name="{{ $homework->title }}"
-    action="{{ route('teacher.homeworks.destroy', $homework) }}"
-    modal="delete-homework-{{ $homework->id }}"
-/>
+        <div class="max-w-3xl">
+
+            <flux:card class="dark:!bg-zinc-950 dark:border-zinc-800">
+
+                @include('teacher.homeworks._form', [
+                    'action' => route('teacher.homeworks.update', $homework),
+                    'method' => 'PUT',
+                    'submitLabel' => 'Save Changes',
+                    'cancelUrl' => route('teacher.homeworks.show', $homework),
+                    'homework' => $homework,
+                ])
+
+            </flux:card>
 
 
-</div>
+            {{-- Delete --}}
+            <flux:card class="mt-6 border-red-200 dark:border-red-900/50 dark:!bg-zinc-950">
+
+                <flux:heading size="lg">
+                    Delete Homework
+                </flux:heading>
+
+                <flux:text class="mt-1 text-zinc-500">
+                    Permanently delete this homework assignment.
+                </flux:text>
+
+                <div class="mt-5">
+
+                    <flux:modal.trigger name="delete-homework-{{ $homework->id }}">
+
+                        <flux:button
+                            variant="danger"
+                            icon="trash"
+                        >
+                            Delete Homework
+                        </flux:button>
+
+                    </flux:modal.trigger>
+
+                </div>
+
+            </flux:card>
+
+        </div>
+
+    </div>
+
+
+    <x-confirm-delete
+        name="{{ $homework->title }}"
+        action="{{ route('teacher.homeworks.destroy', $homework) }}"
+        modal="delete-homework-{{ $homework->id }}"
+    />
 
 </x-layouts::app>

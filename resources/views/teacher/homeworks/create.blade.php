@@ -1,36 +1,47 @@
 <x-layouts::app :title="__('Create Homework')">
 
-<div class="max-w-3xl space-y-6">
+    <div class="space-y-8">
 
-    <h1 class="text-3xl font-bold">
+        {{-- Header --}}
+        <div class="space-y-2">
 
-        Create Homework
+            <flux:button
+                href="{{ route('teacher.homeworks.index') }}"
+                variant="ghost"
+                size="sm"
+                icon="arrow-left"
+                inset
+            >
+                Homework
+            </flux:button>
 
-    </h1>
-
-    <form
-        method="POST"
-        action="{{ route('teacher.homeworks.store') }}"
-enctype="multipart/form-data"
-        class="space-y-5 rounded-xl bg-white p-6 shadow dark:bg-zinc-900">
-
-        @csrf
-
-        @include('teacher.homeworks._form')
-
-        <div class="flex justify-end">
-
-            <button
-                class="rounded-lg bg-green-600 px-5 py-2 text-white hover:bg-green-700">
-
+            <flux:heading size="xl">
                 Create Homework
+            </flux:heading>
 
-            </button>
+            <flux:text class="text-zinc-500">
+                Create a new assignment for one of your classes.
+            </flux:text>
 
         </div>
 
-    </form>
 
-</div>
+        <div class="max-w-3xl">
+
+            <flux:card class="dark:!bg-zinc-950 dark:border-zinc-800">
+
+                @include('teacher.homeworks._form', [
+                    'action' => route('teacher.homeworks.store'),
+                    'method' => 'POST',
+                    'submitLabel' => 'Create Homework',
+                    'cancelUrl' => route('teacher.homeworks.index'),
+                    'homework' => null,
+                ])
+
+            </flux:card>
+
+        </div>
+
+    </div>
 
 </x-layouts::app>
