@@ -59,7 +59,7 @@
                             name="grade"
                             min="0"
                             max="20"
-                            step="0.01"
+                            step="0.25"
                             value="{{ old('grade', $submission->grade) }}"
                             placeholder="0 - 20"
                         />

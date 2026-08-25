@@ -64,9 +64,9 @@ Route::middleware(['auth', 'role:teacher'])
         )->name('homeworks.preview');
 
         Route::get(
-            'submissions/{submission}/preview',
+            'homeworks/submissions/{submission}/preview',
             [TeacherHomeworkSubmissionController::class, 'preview']
-        )->name('submissions.preview');
+        )->name('homeworks.submissions.preview');
     });
 
 Route::middleware(['auth', 'role:parent'])
