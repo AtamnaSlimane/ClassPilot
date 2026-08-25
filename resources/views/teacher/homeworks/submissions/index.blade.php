@@ -1,240 +1,137 @@
-<x-layouts::app :title="$homework->title . ' - Submissions'">
+<x-layouts::app :title="__('Submissions')">
 
-<div class="space-y-6">
+    <div class="space-y-8">
 
-{{-- Header --}}
-<div class="flex items-center justify-between">
+        {{-- Header --}}
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 
-    <div>
-        <h1 class="text-3xl font-bold text-zinc-900 dark:text-white">
-            {{ $homework->title }}
-        </h1>
+            <div class="space-y-2">
 
-        <p class="mt-2 text-zinc-500">
-            {{ $homework->academyClass->name }}
-        </p>
-    </div>
+                <flux:button
+                    href="{{ route('teacher.homeworks.show', $homework) }}"
+                    variant="ghost"
+                    size="sm"
+                    icon="arrow-left"
+                    inset
+                >
+                    {{ $homework->title }}
+                </flux:button>
 
-    <a
-        href="{{ route('teacher.homeworks.show', $homework) }}"
-        class="rounded-lg bg-zinc-600 px-5 py-2 text-white hover:bg-zinc-700">
-        Back to Homework
-    </a>
+                <flux:heading size="xl">
+                    Submissions
+                </flux:heading>
 
-</div>
+                <flux:text class="text-zinc-500">
+                    Review student submissions for this homework.
+                </flux:text>
 
+            </div>
 
-{{-- Homework information --}}
-<div class="rounded-xl bg-white p-6 shadow dark:bg-zinc-900">
-
-    <div class="grid gap-4 md:grid-cols-3">
-
-        <div>
-            <p class="text-sm text-zinc-500">
-                Class
-            </p>
-
-            <p class="font-medium">
-                {{ $homework->academyClass->name }}
-            </p>
-        </div>
-
-        <div>
-            <p class="text-sm text-zinc-500">
-                Due Date
-            </p>
-
-            <p class="font-medium">
-                {{ $homework->due_date?->format('d M Y') ?? 'No due date' }}
-            </p>
-        </div>
-
-        <div>
-            <p class="text-sm text-zinc-500">
-                Submissions
-            </p>
-
-            <p class="font-medium">
-                {{ $submissions->count() }}
-            </p>
-        </div>
-
-    </div>
-
-</div>
-
-
-{{-- Submissions --}}
-<div class="overflow-hidden rounded-xl bg-white shadow dark:bg-zinc-900">
-
-    <div class="border-b border-zinc-200 p-6 dark:border-zinc-700">
-
-        <h2 class="text-xl font-semibold">
-            Student Submissions
-        </h2>
-
-    </div>
-
-
-    @if($submissions->isEmpty())
-
-        <div class="p-10 text-center text-zinc-500">
-
-            No students have submitted this homework yet.
+            <flux:badge color="zinc">
+                {{ $submissions->count() }} submissions
+            </flux:badge>
 
         </div>
 
-    @else
 
-        <div class="overflow-x-auto">
+        <flux:card class="overflow-hidden p-0 dark:!bg-zinc-950 dark:border-zinc-800">
 
-            <table class="w-full text-left">
+            @if($submissions->count())
 
-                <thead class="bg-zinc-50 dark:bg-zinc-800">
-
-                    <tr>
-
-                        <th class="px-6 py-4 font-semibold">
-                            Student
-                        </th>
-
-                        <th class="px-6 py-4 font-semibold">
-                            Submitted
-                        </th>
-
-                        <th class="px-6 py-4 font-semibold">
-                            File
-                        </th>
-
-                        <th class="px-6 py-4 font-semibold">
-                            Grade
-                        </th>
-
-                        <th class="px-6 py-4">
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
+                <div class="divide-y divide-zinc-200 dark:divide-zinc-800">
 
                     @foreach($submissions as $submission)
 
-                        <tr class="border-t border-zinc-200 dark:border-zinc-700">
+                        <div class="flex items-center justify-between gap-4 px-6 py-5 hover:bg-zinc-50 dark:hover:bg-zinc-900">
 
-                            <td class="px-6 py-4">
+                            <div class="flex min-w-0 items-center gap-4">
 
-                                <div class="font-medium">
-                                    {{ $submission->student->name }}
+                                <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-sm font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+
+                                    {{ collect(explode(' ', $submission->student->name))
+                                        ->map(fn ($part) => $part[0] ?? '')
+                                        ->take(2)
+                                        ->implode('') }}
+
                                 </div>
 
-                                @if($submission->student->email)
-                                    <div class="text-sm text-zinc-500">
-                                        {{ $submission->student->email }}
-                                    </div>
-                                @endif
+                                <div class="min-w-0">
 
-                            </td>
+                                    <flux:text class="font-medium">
+                                        {{ $submission->student->name }}
+                                    </flux:text>
 
+                                    <flux:text class="text-sm text-zinc-500">
+                                        Submitted {{ $submission->created_at->format('M d, Y H:i') }}
+                                    </flux:text>
 
-                            <td class="px-6 py-4">
+                                </div>
 
-                                @if($submission->submitted_at)
-
-                                    <div>
-                                        {{ $submission->submitted_at->format('d M Y') }}
-                                    </div>
-
-                                    <div class="text-sm text-zinc-500">
-                                        {{ $submission->submitted_at->format('H:i') }}
-                                    </div>
-
-                                @else
-
-                                    <span class="text-zinc-500">
-                                        Not submitted
-                                    </span>
-
-                                @endif
-
-                            </td>
+                            </div>
 
 
-                            <td class="px-6 py-4">
-
-                                @if($submission->file_path)
-
-                                    @php
-                                        $extension = strtolower(
-                                            pathinfo(
-                                                $submission->file_path,
-                                                PATHINFO_EXTENSION
-                                            )
-                                        );
-                                    @endphp
-
-                                    <span class="rounded-md bg-zinc-100 px-2 py-1 text-sm dark:bg-zinc-800">
-                                        {{ strtoupper($extension) }}
-                                    </span>
-
-                                @else
-
-                                    <span class="text-zinc-500">
-                                        No file
-                                    </span>
-
-                                @endif
-
-                            </td>
-
-
-                            <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
 
                                 @if($submission->grade !== null)
 
-                                    <span class="font-semibold">
-                                        {{ $submission->grade }}
-                                    </span>
+                                    <flux:badge color="emerald">
+                                        {{ $submission->grade }}/20
+                                    </flux:badge>
 
                                 @else
 
-                                    <span class="text-zinc-500">
+                                    <flux:badge color="amber">
                                         Not graded
-                                    </span>
+                                    </flux:badge>
 
                                 @endif
 
-                            </td>
+                                <flux:button
+                                    href="{{ route(
+                                        'teacher.homeworks.submissions.show',
+                                        [$homework, $submission]
+                                    ) }}"
+                                    variant="ghost"
+                                    size="sm"
+                                    icon="chevron-right"
+                                    inset
+                                />
 
+                            </div>
 
-                            <td class="px-6 py-4 text-right">
-
-                                <a
-                                    href="{{ route('teacher.homeworks.submissions.show', [$homework, $submission]) }}"
-                                    class="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700">
-
-                                    View
-
-                                </a>
-
-                            </td>
-
-                        </tr>
+                        </div>
 
                     @endforeach
 
-                </tbody>
+                </div>
 
-            </table>
+            @else
 
-        </div>
+                <div class="flex flex-col items-center justify-center px-6 py-16 text-center">
 
-    @endif
+                    <div class="mb-3 flex size-12 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-900">
 
-</div>
+                        <flux:icon
+                            name="inbox"
+                            class="size-6 text-zinc-400"
+                        />
 
-</div>
+                    </div>
+
+                    <flux:heading size="sm">
+                        No submissions
+                    </flux:heading>
+
+                    <flux:text class="mt-1 text-zinc-500">
+                        Students have not submitted this homework yet.
+                    </flux:text>
+
+                </div>
+
+            @endif
+
+        </flux:card>
+
+    </div>
 
 </x-layouts::app>
-

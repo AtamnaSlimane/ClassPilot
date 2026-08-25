@@ -1,252 +1,211 @@
+<x-layouts::app :title="$submission->student->name">
 
-<x-layouts::app :title="$submission->student->name . ' - Submission'">
+    <div class="space-y-8">
 
-<div class="space-y-6">
+        {{-- Header --}}
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 
-```
-{{-- Header --}}
-<div class="flex items-center justify-between">
+            <div class="space-y-2">
 
-    <div>
-        <h1 class="text-3xl font-bold text-zinc-900 dark:text-white">
-            {{ $submission->student->name }}'s Submission
-        </h1>
+                <flux:button
+                    href="{{ route(
+                        'teacher.homeworks.submissions.index',
+                        $homework
+                    ) }}"
+                    variant="ghost"
+                    size="sm"
+                    icon="arrow-left"
+                    inset
+                >
+                    Submissions
+                </flux:button>
 
-        <p class="mt-2 text-zinc-500">
-            {{ $homework->title }}
-            ·
-            {{ $homework->academyClass->name }}
-        </p>
-    </div>
+                <flux:heading size="xl">
+                    {{ $submission->student->name }}
+                </flux:heading>
 
-    <a
-        href="{{ route('teacher.homeworks.submissions.index', $homework) }}"
-        class="rounded-lg bg-zinc-600 px-5 py-2 text-white hover:bg-zinc-700">
-
-        Back to Submissions
-
-    </a>
-
-</div>
-
-
-{{-- Student / Homework Information --}}
-<div class="rounded-xl bg-white p-6 shadow dark:bg-zinc-900">
-
-    <div class="grid gap-6 md:grid-cols-2">
-
-        <div>
-            <p class="text-sm text-zinc-500">
-                Student
-            </p>
-
-            <p class="mt-1 text-lg font-semibold">
-                {{ $submission->student->name }}
-            </p>
-
-            @if($submission->student->email)
-
-                <p class="text-sm text-zinc-500">
-                    {{ $submission->student->email }}
-                </p>
-
-            @endif
-        </div>
-
-
-        <div>
-            <p class="text-sm text-zinc-500">
-                Homework
-            </p>
-
-            <p class="mt-1 text-lg font-semibold">
-                {{ $homework->title }}
-            </p>
-
-            <p class="text-sm text-zinc-500">
-                {{ $homework->academyClass->name }}
-            </p>
-        </div>
-
-
-        <div>
-            <p class="text-sm text-zinc-500">
-                Submitted At
-            </p>
-
-            @if($submission->submitted_at)
-
-                <p class="mt-1 font-medium">
-                    {{ $submission->submitted_at->format('d M Y \a\t H:i') }}
-                </p>
-
-            @else
-
-                <p class="mt-1 text-zinc-500">
-                    Not submitted
-                </p>
-
-            @endif
-        </div>
-
-
-        <div>
-            <p class="text-sm text-zinc-500">
-                Due Date
-            </p>
-
-            <p class="mt-1 font-medium">
-                {{ $homework->due_date?->format('d M Y') ?? 'No due date' }}
-            </p>
-        </div>
-
-    </div>
-
-</div>
-
-
-{{-- Submitted File --}}
-<div class="rounded-xl bg-white p-6 shadow dark:bg-zinc-900">
-
-    <h2 class="text-xl font-semibold">
-        Submitted File
-    </h2>
-
-
-    @if($submission->file_path)
-
-        @php
-            $extension = strtolower(
-                pathinfo(
-                    $submission->file_path,
-                    PATHINFO_EXTENSION
-                )
-            );
-        @endphp
-
-
-        {{-- Images --}}
-        @if(in_array($extension, ['png', 'jpg', 'jpeg', 'gif', 'webp']))
-
-            <div class="mt-5">
-
-                <img
-                    src="{{ route('teacher.submissions.preview', $submission) }}"
-                    alt="Student submission"
-                    class="max-h-[700px] max-w-full rounded-lg border object-contain">
+                <flux:text class="text-zinc-500">
+                    Submission for {{ $homework->title }}
+                </flux:text>
 
             </div>
 
-
-        {{-- PDF --}}
-        @elseif($extension === 'pdf')
-
-            <iframe
-                src="{{ route('teacher.submissions.preview', $submission) }}"
-                class="mt-5 h-[800px] w-full rounded-lg border">
-            </iframe>
-
-
-        {{-- Other files --}}
-        @else
-
-            <div class="mt-5 rounded-lg border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800">
-
-                <p class="font-medium">
-                    {{ basename($submission->file_path) }}
-                </p>
-
-                <p class="mt-1 text-sm text-zinc-500">
-                    This file type cannot be previewed directly in the browser.
-                </p>
-
-                <a
-                    href="{{ route('teacher.submissions.preview', $submission) }}"
-                    target="_blank"
-                    class="mt-4 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
-
-                    Open File
-
-                </a>
-
-            </div>
-
-        @endif
-
-    @else
-
-        <div class="mt-5 rounded-lg border border-dashed border-zinc-300 p-8 text-center text-zinc-500 dark:border-zinc-700">
-
-            No file was submitted.
-
-        </div>
-
-    @endif
-
-</div>
-
-
-{{-- Grading --}}
-<div class="rounded-xl bg-white p-6 shadow dark:bg-zinc-900">
-
-    <h2 class="text-xl font-semibold">
-        Grade & Feedback
-    </h2>
-
-    <div class="mt-5 space-y-4">
-
-        <div>
-
-            <p class="text-sm text-zinc-500">
-                Grade
-            </p>
-
-            <p class="mt-1 text-lg font-semibold">
-                {{ $submission->grade ?? 'Not graded yet' }}
-            </p>
+            <flux:button
+                href="{{ route(
+                    'teacher.homeworks.submissions.edit',
+                    [$homework, $submission]
+                ) }}"
+                variant="primary"
+                icon="pencil"
+            >
+                Grade Submission
+            </flux:button>
 
         </div>
 
 
-        <div>
+        {{-- Stats --}}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
 
-            <p class="text-sm text-zinc-500">
-                Feedback
-            </p>
+            <flux:card class="flex items-center gap-4 p-5 dark:!bg-zinc-950 dark:border-zinc-800">
 
-            <p class="mt-1 whitespace-pre-line">
-                {{ $submission->feedback ?: 'No feedback provided.' }}
-            </p>
+                <div class="flex size-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+                    <flux:icon name="user" class="size-5" />
+                </div>
+
+                <div>
+
+                    <flux:text class="text-xs uppercase tracking-wide text-zinc-500">
+                        Student
+                    </flux:text>
+
+                    <flux:heading size="sm">
+                        {{ $submission->student->name }}
+                    </flux:heading>
+
+                </div>
+
+            </flux:card>
+
+
+            <flux:card class="flex items-center gap-4 p-5 dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <div class="flex size-11 items-center justify-center rounded-xl bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400">
+                    <flux:icon name="document-text" class="size-5" />
+                </div>
+
+                <div>
+
+                    <flux:text class="text-xs uppercase tracking-wide text-zinc-500">
+                        Homework
+                    </flux:text>
+
+                    <flux:heading size="sm">
+                        {{ $homework->title }}
+                    </flux:heading>
+
+                </div>
+
+            </flux:card>
+
+
+            <flux:card class="flex items-center gap-4 p-5 dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <div class="flex size-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+                    <flux:icon name="academic-cap" class="size-5" />
+                </div>
+
+                <div>
+
+                    <flux:text class="text-xs uppercase tracking-wide text-zinc-500">
+                        Grade
+                    </flux:text>
+
+                    <flux:heading size="lg">
+                        {{ $submission->grade !== null
+                            ? $submission->grade . '/20'
+                            : 'Not graded' }}
+                    </flux:heading>
+
+                </div>
+
+            </flux:card>
+
+        </div>
+
+
+        {{-- Submission --}}
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+            <flux:card class="lg:col-span-2 dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <flux:heading size="lg">
+                    Submission
+                </flux:heading>
+
+                <div class="mt-5">
+
+                    @if($submission->file_path)
+
+                        <div class="flex items-center justify-between rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+
+                            <div class="flex items-center gap-3">
+
+                                <div class="flex size-11 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-900">
+
+                                    <flux:icon
+                                        name="paper-clip"
+                                        class="size-5 text-zinc-500"
+                                    />
+
+                                </div>
+
+                                <div>
+
+                                    <flux:text class="font-medium">
+                                        Submitted file
+                                    </flux:text>
+
+                                    <flux:text class="text-sm text-zinc-500">
+                                        Uploaded {{ $submission->created_at->format('M d, Y H:i') }}
+                                    </flux:text>
+
+                                </div>
+
+                            </div>
+
+                            <flux:button
+                                href="{{ route(
+                                    'teacher.homeworks.submissions.preview',
+                                    $submission
+                                ) }}"
+                                target="_blank"
+                                variant="primary"
+                                icon="eye"
+                            >
+                                Preview
+                            </flux:button>
+
+                        </div>
+
+                    @else
+
+                        <flux:text class="text-zinc-500">
+                            No file submitted.
+                        </flux:text>
+
+                    @endif
+
+                </div>
+
+            </flux:card>
+
+
+            {{-- Feedback --}}
+            <flux:card class="dark:!bg-zinc-950 dark:border-zinc-800">
+
+                <flux:heading size="lg">
+                    Feedback
+                </flux:heading>
+
+                @if($submission->feedback)
+
+                    <div class="mt-5 whitespace-pre-line text-zinc-700 dark:text-zinc-300">
+                        {{ $submission->feedback }}
+                    </div>
+
+                @else
+
+                    <flux:text class="mt-5 text-zinc-500">
+                        No feedback provided.
+                    </flux:text>
+
+                @endif
+
+            </flux:card>
 
         </div>
 
     </div>
-
-</div>
-
-
-{{-- Actions --}}
-<div class="flex items-center justify-between">
-
-    <a
-        href="{{ route('teacher.homeworks.submissions.index', $homework) }}"
-        class="rounded-lg bg-zinc-600 px-5 py-2 text-white hover:bg-zinc-700">
-
-        Back
-
-    </a>
-
-    <a
-        href="{{ route('teacher.homeworks.submissions.edit', [$homework, $submission]) }}"
-        class="rounded-lg bg-blue-600 px-5 py-2 text-white hover:bg-blue-700">
-
-        Grade Submission
-
-    </a>
-
-</div>
-```
-
-</div>
 
 </x-layouts::app>

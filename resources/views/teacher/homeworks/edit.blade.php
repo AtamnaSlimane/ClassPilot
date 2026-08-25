@@ -66,17 +66,11 @@
 
                 <div class="mt-5">
 
-                    <flux:modal.trigger name="delete-homework-{{ $homework->id }}">
-
-                        <flux:button
-                            variant="danger"
-                            icon="trash"
-                        >
-                            Delete Homework
-                        </flux:button>
-
-                    </flux:modal.trigger>
-
+    <x-confirm-delete
+        name="{{ $homework->title }}"
+        action="{{ route('teacher.homeworks.destroy', $homework) }}"
+        modal="delete-homework-{{ $homework->id }}"
+    />
                 </div>
 
             </flux:card>
@@ -86,10 +80,6 @@
     </div>
 
 
-    <x-confirm-delete
-        name="{{ $homework->title }}"
-        action="{{ route('teacher.homeworks.destroy', $homework) }}"
-        modal="delete-homework-{{ $homework->id }}"
-    />
+
 
 </x-layouts::app>
