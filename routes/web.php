@@ -16,6 +16,7 @@ use App\Http\Controllers\Parent\ChildrenController;
 use App\Http\Controllers\Student\TeacherController as StudentTeacherController;
 use App\Http\Controllers\Student\ClassController;
 use App\Http\Controllers\Student\HomeworkController;
+use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Models\Homework;
 use App\Models\Student;
 
@@ -54,6 +55,8 @@ Route::middleware(['auth', 'role:teacher'])
         Route::view('dashboard', 'teacher.dashboard')->name('dashboard');
 
         Route::resource('students', TeacherStudentController::class);
+
+        Route::get('dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
 
         Route::resource('homeworks.submissions', TeacherHomeworkSubmissionController::class)->except('delete');
         Route::resource('classes', TeacherAcademicClassController::class);
