@@ -412,52 +412,78 @@
 
         </div>
 {{-- Pending Submissions --}}
-<flux:card class="overflow-hidden p-0 border-amber-200 dark:!bg-zinc-950 dark:border-amber-900/50">
+@php
+    $hasPendingSubmissions = ($pendingSubmissions ?? collect())->isNotEmpty();
+@endphp
 
-    <div class="flex flex-col gap-4 border-b border-amber-200 bg-amber-50/50 p-6 dark:border-amber-900/50 dark:bg-amber-500/5 sm:flex-row sm:items-center sm:justify-between">
+<flux:card
+    class="overflow-hidden p-0
+    {{ $hasPendingSubmissions
+        ? 'border-amber-200 dark:border-amber-900/50 dark:!bg-zinc-950'
+        : 'border-emerald-200 dark:border-emerald-900/50 dark:!bg-zinc-950'
+    }}"
+>
+
+    <div
+        class="flex flex-col gap-4 border-b p-6 sm:flex-row sm:items-center sm:justify-between
+        {{ $hasPendingSubmissions
+            ? 'border-amber-200 bg-amber-50/50 dark:border-amber-900/50 dark:bg-amber-500/5'
+            : 'border-emerald-200 bg-emerald-50/50 dark:border-emerald-900/50 dark:bg-emerald-500/5'
+        }}"
+    >
 
         <div class="flex items-center gap-3">
 
-            <div class="flex size-10 shrink-0 items-center justify-center rounded-xl
-                        bg-amber-100 text-amber-600
-                        dark:bg-amber-500/10 dark:text-amber-400">
+            {{-- Dynamic icon --}}
+            <div
+                class="flex size-10 shrink-0 items-center justify-center rounded-xl
+                {{ $hasPendingSubmissions
+                    ? 'bg-amber-100 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400'
+                    : 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400'
+                }}"
+            >
 
                 <flux:icon
-                    name="clock"
+                    name="{{ $hasPendingSubmissions ? 'clock' : 'check' }}"
                     class="size-5"
                 />
 
             </div>
 
+
+            {{-- Dynamic heading --}}
             <div>
 
-                <flux:heading size="lg">
-                    Needs Review
-                </flux:heading>
+                @if($hasPendingSubmissions)
 
-                <flux:text class="mt-1 text-zinc-500">
-                    Student submissions waiting for your feedback.
-                </flux:text>
+                    <flux:heading size="lg">
+                        Needs Review
+                    </flux:heading>
+
+                    <flux:text class="mt-1 text-zinc-500">
+                        Student submissions waiting for your feedback.
+                    </flux:text>
+
+                @else
+
+                    <flux:heading size="lg" class="text-emerald-600 dark:text-emerald-400">
+                        Everything is Reviewed
+                    </flux:heading>
+
+                    <flux:text class="mt-1 text-zinc-500">
+                        You have no student submissions waiting for review.
+                    </flux:text>
+
+                @endif
 
             </div>
 
         </div>
 
-        @if($pendingSubmissionsCount > 0)
-
-            <flux:badge color="amber">
-                {{ $pendingSubmissionsCount }} pending
-            </flux:badge>
-
-        @endif
-
-
     </div>
-
-
     <div class="overflow-x-auto">
 
-        @forelse($pendingSubmissions ?? [] as $submission)
+        @foreach($pendingSubmissions ?? [] as $submission)
 
             <a
                 href="{{ route(
@@ -531,32 +557,8 @@
 
             </a>
 
-        @empty
 
-            <div class="p-10 text-center">
-
-                <div class="mx-auto flex size-12 items-center justify-center rounded-full
-                            bg-emerald-50 text-emerald-600
-                            dark:bg-emerald-500/10 dark:text-emerald-400">
-
-                    <flux:icon
-                        name="check"
-                        class="size-6"
-                    />
-
-                </div>
-
-                <flux:heading size="sm" class="mt-4">
-                    Everything is reviewed
-                </flux:heading>
-
-                <flux:text class="mt-1 text-zinc-500">
-                    You have no student submissions waiting for review.
-                </flux:text>
-
-            </div>
-
-        @endforelse
+        @endforeach
 
     </div>
 
