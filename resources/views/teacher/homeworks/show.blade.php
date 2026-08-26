@@ -31,7 +31,7 @@
 
                         <flux:badge color="amber" icon="calendar">
 
-                            Due {{ $homework->due_date->format('M d, Y H:i') }}
+                            Due {{ $homework->due_date->format('M d, Y') }}
 
                         </flux:badge>
 

@@ -96,7 +96,7 @@
         </flux:label>
 
         <flux:input
-            type="datetime-local"
+            type="date"
             name="due_date"
             value="{{ old(
                 'due_date',

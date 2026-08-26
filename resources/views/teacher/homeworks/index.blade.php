@@ -104,11 +104,11 @@
                                 </div>
 
                                 <div class="min-w-0">
-
+<a href="{{route('teacher.homeworks.show',$homework)}}">
                                     <flux:heading size="sm" class="truncate">
                                         {{ $homework->title }}
                                     </flux:heading>
-
+</a>
                                     <div class="mt-1 flex flex-wrap items-center gap-2">
 
                                         <flux:badge color="zinc" size="sm">
@@ -128,15 +128,6 @@
                                 </div>
 
                             </div>
-
-
-                            <flux:button
-                                href="{{ route('teacher.homeworks.show', $homework) }}"
-                                variant="ghost"
-                                size="sm"
-                                icon="chevron-right"
-                                inset
-                            />
 
                         </div>
 
