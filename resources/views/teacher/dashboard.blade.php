@@ -1,4 +1,4 @@
-<x-layouts::app :title="__('Teacher Dashboard')">
+<x-layouts::app :title="__('Dashboard')">
 
     <div class="space-y-8">
 

@@ -23,9 +23,18 @@ use App\Models\Student;
 Route::view('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
-});
+    Route::get('/dashboard', function () {
+        $user = auth()->user();
 
+        return match ($user->role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'teacher' => redirect()->route('teacher.dashboard'),
+            'parent' => redirect()->route('parent.dashboard'),
+            'student' => redirect()->route('student.dashboard'),
+            default => abort(403),
+        };
+    })->name('dashboard');
+});
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
