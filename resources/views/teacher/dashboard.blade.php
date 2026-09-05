@@ -1,49 +1,129 @@
 <x-layouts::app :title="__('Teacher Dashboard')">
 
-    <div class="m-0 flex flex-col">
+    <div class="m-0">
 
-        {{-- Hero Section --}}
-        <div class="flex flex-col gap-6 p-3 md:flex-row md:items-end md:justify-between md:h-75 md:mb-3">
+       {{-- ================= HERO ================= --}}
+<section class="relative min-h-[calc(100vh-2rem)] overflow-hidden bg-[#607050]">
 
-            {{-- Title --}}
-            <div class="flex w-full flex-col justify-end p-2 md:w-1/2 md:h-50">
+    {{-- LEFT SIDE --}}
+    <div
+        class="relative z-20 flex min-h-[calc(100vh-5rem)] w-full items-center
+               px-8 lg:w-1/2 lg:px-16">
 
-                <h1 class="text-3xl font-bold text-zinc-900 sm:text-4xl md:text-5xl">
-                    Teacher Dashboard
-                </h1>
+        <div class="max-w-xl">
 
-                <p class="mt-3 ml-1 text-base text-zinc-500 sm:text-lg md:ml-3 md:mb-8">
-                    Manage your students from here.
-                </p>
+            <h1
+                class="font-['Nunito'] text-5xl font-bold leading-tight tracking-tight
+                       text-[#F3E9D2] lg:text-6xl">
 
-            </div>
+                Teacher Dashboard
+
+            </h1>
+
+            <p
+                class="ml-1 mt-4 text-lg font-medium tracking-wide
+                       text-[#D8D9C9] lg:text-xl">
+
+                Manage your students from here.
+
+            </p>
+
+        </div>
+
+    </div>
 
 
-            {{-- Students Card --}}
+    {{-- RIGHT SIDE IMAGE --}}
+    <div class="absolute inset-y-0 top-0 right-0 hidden w-[62%] lg:block">
+
+        <img
+            src="{{ asset('images/teacher-class.jpg') }}"
+            alt="Teacher in classroom"
+            class="h-full w-full object-cover object-center"
+        >
+
+
+        {{-- LEFT FADE --}}
+        <div
+            class="absolute inset-y-0 left-0 w-[38%]
+                   bg-linear-to-r
+                   from-[#607050]
+                   via-[#607050]/70
+                   to-transparent">
+        </div>
+
+
+        {{-- VERY SOFT TOP FADE --}}
+        <div
+            class="absolute inset-x-0 top-0 h-8
+                   bg-linear-to-b
+                   from-[#607050]/40
+                   to-transparent">
+        </div>
+
+
+        {{-- VERY SOFT RIGHT FADE --}}
+        <div
+            class="absolute inset-y-0 right-0 w-6
+                   bg-linear-to-l
+                   from-[#607050]/30
+                   to-transparent">
+        </div>
+
+
+        {{-- BOTTOM FADE --}}
+        <div
+            class="absolute inset-x-0 bottom-0 h-24
+                   bg-linear-to-t
+                   from-[#607050]/70
+                   to-transparent">
+        </div>
+
+    </div>
+
+</section>
+
+
+        {{-- ================= STUDENTS HERO CARD ================= --}}
+        <section class="px-6 py-12 lg:px-16">
+
             <div
-                class="flex min-h-64 w-full flex-col items-center justify-center rounded-xl border bg-linear-to-br from-blue-600 to-sky-500 p-6 font-bold shadow-lg md:h-full md:w-1/2">
+                class="mx-auto flex min-h-80 max-w-6xl flex-col items-center
+                       justify-center rounded-3xl
+                       bg-[#FAF9F5]
+                       px-6 py-12 text-center shadow-xl">
 
-                <h2 class="text-xl font-bold text-center text-white">
+                <h2 class="text-3xl font-bold text-[#2C3528]">
                     Students
                 </h2>
 
-                <p class="mt-2 text-center text-white">
+                <p class="mt-3 text-lg text-[#2C3528]/90">
                     View and manage your students.
                 </p>
 
-                <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:gap-4">
+
+                <div class="mt-8 flex flex-col gap-4 sm:flex-row">
 
                     <a
                         href="{{ route('teacher.students.index') }}"
-                        class="rounded-lg bg-white px-5 py-2.5 text-center font-medium text-blue-600 transition-all duration-300 hover:scale-105 hover:bg-zinc-100">
+                        class="rounded-xl bg-white px-6 py-3
+                               font-semibold text-[#E8A87C]
+                               shadow-sm transition-all duration-300
+                               hover:scale-105 hover:bg-zinc-100">
 
                         View Students
 
                     </a>
 
+
                     <a
                         href="{{ route('teacher.students.create') }}"
-                        class="rounded-lg border border-white bg-white/20 px-5 py-2.5 text-center font-medium text-white backdrop-blur transition-all duration-300 hover:bg-blue-900">
+                        class="rounded-xl border border-[#2C3528]/70
+                               bg-[#E8A87C] px-6 py-3
+                               font-semibold text-white
+                               backdrop-blur-sm
+                               transition-all duration-300
+                               hover:scale-105 hover:bg-[#E8A87C]/80">
 
                         Add Student
 
@@ -53,108 +133,121 @@
 
             </div>
 
-        </div>
+        </section>
 
 
-        {{-- Feature Cards --}}
-        <div class="grid grid-cols-1 gap-3 p-3 sm:grid-cols-2 md:grid-cols-4">
+        {{-- ================= DASHBOARD CARDS ================= --}}
+        <section class="px-6 pb-16 lg:px-16">
 
-            {{-- Classes --}}
-            <a
-                href="#"
-                class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div class="mx-auto grid max-w-6xl gap-4 md:grid-cols-2 lg:grid-cols-4">
 
-                <div class="flex items-center gap-3">
 
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                        <flux:icon.academic-cap class="h-5 w-5 text-blue-600" />
+                {{-- Classes --}}
+                <a
+                    href="#"
+                    class="rounded-2xl border border-[#A3B19B] bg-[#2C3528]/60 p-5
+                           shadow-sm transition-all duration-300
+                           hover:-translate-y-1 hover:shadow-lg">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100">
+                            <flux:icon.academic-cap class="h-5 w-5 text-blue-600" />
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-[#FAF9F5]">
+                            Classes
+                        </h3>
+
                     </div>
 
-                    <h3 class="text-lg font-semibold text-zinc-900">
-                        Classes
-                    </h3>
+                    <p class="mt-4 text-sm text-[#FAF9F5]/90">
+                        View and manage all your classes.
+                    </p>
 
-                </div>
-
-                <p class="mt-4 text-sm text-zinc-500">
-                    View and manage all your classes.
-                </p>
-
-            </a>
+                </a>
 
 
-            {{-- Subjects --}}
-            <a
-                href="#"
-                class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                {{-- Subjects --}}
+                <a
+                    href="#"
+                    class="rounded-2xl border border-[#A3B19B] bg-[#2C3528]/60 p-5
+                           shadow-sm transition-all duration-300
+                           hover:-translate-y-1 hover:shadow-lg">
 
-                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-3">
 
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sky-100">
-                        <flux:icon.book-open class="h-5 w-5 text-sky-600" />
+                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100">
+                            <flux:icon.book-open class="h-5 w-5 text-sky-600" />
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-[#FAF9F5]">
+                            Subjects
+                        </h3>
+
                     </div>
 
-                    <h3 class="text-lg font-semibold text-zinc-900">
-                        Subjects
-                    </h3>
+                    <p class="mt-4 text-sm text-[#FAF9F5]/90">
+                        Organize and update your subjects.
+                    </p>
 
-                </div>
-
-                <p class="mt-4 text-sm text-zinc-500">
-                    Organize and update your subjects.
-                </p>
-
-            </a>
+                </a>
 
 
-            {{-- Attendance --}}
-            <a
-                href="#"
-                class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                {{-- Attendance --}}
+                <a
+                    href="#"
+                    class="rounded-2xl border border-[#A3B19B] bg-[#2C3528]/60 p-5
+                           shadow-sm transition-all duration-300
+                           hover:-translate-y-1 hover:shadow-lg">
 
-                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-3">
 
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100">
-                        <flux:icon.clipboard-document-check class="h-5 w-5 text-indigo-600" />
+                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100">
+                            <flux:icon.clipboard-document-check class="h-5 w-5 text-indigo-600" />
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-[#FAF9F5]">
+                            Attendance
+                        </h3>
+
                     </div>
 
-                    <h3 class="text-lg font-semibold text-zinc-900">
-                        Attendance
-                    </h3>
+                    <p class="mt-4 text-sm text-[#FAF9F5]/90">
+                        Track and manage student attendance.
+                    </p>
 
-                </div>
-
-                <p class="mt-4 text-sm text-zinc-500">
-                    Track and manage student attendance.
-                </p>
-
-            </a>
+                </a>
 
 
-            {{-- Reports --}}
-            <a
-                href="#"
-                class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                {{-- Reports --}}
+                <a
+                    href="#"
+                    class="rounded-2xl border border-[#A3B19B] bg-[#2C3528]/60 p-5
+                           shadow-sm transition-all duration-300
+                           hover:-translate-y-1 hover:shadow-lg">
 
-                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-3">
 
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-violet-100">
-                        <flux:icon.chart-bar class="h-5 w-5 text-violet-600" />
+                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-100">
+                            <flux:icon.chart-bar class="h-5 w-5 text-violet-600" />
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-[#FAF9F5]">
+                            Reports
+                        </h3>
+
                     </div>
 
-                    <h3 class="text-lg font-semibold text-zinc-900">
-                        Reports
-                    </h3>
+                    <p class="mt-4 text-sm text-[#FAF9F5]/90">
+                        Generate and review student reports.
+                    </p>
 
-                </div>
+                </a>
 
-                <p class="mt-4 text-sm text-zinc-500">
-                    Generate and review student reports.
-                </p>
+            </div>
 
-            </a>
-
-        </div>
+        </section>
 
     </div>
 
